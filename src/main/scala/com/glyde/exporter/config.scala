@@ -34,6 +34,7 @@ object Config {
   implicit val showConfig: Show[Config] = (t: Config) => s"""
        |kafka-brokers: ${t.exporter.kafka.bootstrapServers}
        |poll-interval: ${t.exporter.pollInterval}
+       |group-whitelist: ${t.exporter.kafka.groupWhitelist.mkString(",")}
        |security-protocol: ${t.exporter.kafka.securityConfig.fold("PLAINTEXT")(_.securityProtocol)}
      """.stripMargin
 }

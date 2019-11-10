@@ -6,22 +6,65 @@ Export metrics from a kafka cluster for prometheus
 >
 > &mdash; Franz Kafka (introduction to 'The Silence of the Sirens')
 
+### Configuration
+Configuration options can be passed via environment variables, system properties or a configuration file.
+
+| Property                           | Environment Variable           | Default    | Notes |
+| -------------                      |-------------                   | -----      | ----- |
+| `exporter.kafka.bootstrap-servers` | `KAFKA_BROKERS`                | -          | Address of kafka servers (`host:port,host:port...`)                                       |
+| `exporter.kafka.group-whitelist`   | `KAFKA_GROUP_WHITELIST`        | []         | List of regex to filter which consumer groups are reported. Empty results in no filtering |
+| `exporter.poll-interval`           | `KAFKA_EXPORTER_POLL_INTERVAL` | 30 seconds | How often to collect metrics                                                              |
+| `exporter.port`                    | `KAFKA_EXPORTER_PORT`          | 9095       | Which port to make metrics available on                                                   |
+
 ### Run
-##### Options
+Equivalent ways of running `kafka-siren` to collect metrics for
+consumer groups matching the regex `group-1` from a kafka server
+running at `localhost:9093` and expose them on port `9000`.
+
+```bash
+docker run -p 9000:9000 \
+    --env KAFKA_BROKERS=localhost:9093 \
+    --env KAFKA_GROUP_WHITELIST.0=group-1 \
+    --env KAFKA_EXPORTER_PORT=9000
+    glyderj/kafka-siren
+```
+
+```bash
+docker run -p 9000:9000 \
+    --env JAVA_OPTS="-Dexporter.kafka.bootstrap-servers=localhost:9093 -Dexporter.kafka.group-whitelist.0=group-1 -Dexporter.port=9000"
+    glyderj/kafka-siren
+```
+
+Mount the below inside your container and load
+```hocon
+exporter {
+  kafka {
+    bootstrap-servers = "localhost:9093"
+    group-whitelist = ["topic-1"]
+  }
+  port = 9000
+}
+```
+```bash
+docker run -p 8000:8000 \
+    -v $(pwd):/opt/docker/conf/ \
+    --env JAVA_OPTS="-Dconfig.file=/opt/docker/conf/application.conf"
+    glyderj/kafka-siren
+```
 
 ### Metrics
 
-##### Topics
+#### Topics
 __`kafka_topic_partition_end`__
 
-##### Consumer Groups
+#### Consumer Groups
 __`kafka_consumer_group_members`__
 
 __`kafka_consumer_group_offset`__
 
 __`kafka_consumer_group_lag`__
 
-##### Example
+#### Example
 ```
 # TYPE kafka_consumer_group_members gauge
 kafka_consumer_group_members{consumer_group="group-1"} 0.0
