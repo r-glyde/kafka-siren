@@ -25,13 +25,13 @@ running at `localhost:9093` and expose them on port `9000`.
 docker run -p 9000:9000 \
     --env KAFKA_BROKERS=localhost:9093 \
     --env KAFKA_GROUP_WHITELIST.0=group-1 \
-    --env KAFKA_EXPORTER_PORT=9000
+    --env KAFKA_EXPORTER_PORT=9000 \
     glyderj/kafka-siren
 ```
 
 ```bash
 docker run -p 9000:9000 \
-    --env JAVA_OPTS="-Dexporter.kafka.bootstrap-servers=localhost:9093 -Dexporter.kafka.group-whitelist.0=group-1 -Dexporter.port=9000"
+    --env JAVA_OPTS="-Dexporter.kafka.bootstrap-servers=localhost:9093 -Dexporter.kafka.group-whitelist.0=group-1 -Dexporter.port=9000" \
     glyderj/kafka-siren
 ```
 
@@ -49,7 +49,7 @@ Then:
 ```bash
 docker run -p 9000:9000 \
     -v $(pwd):/opt/docker/conf/ \
-    --env JAVA_OPTS="-Dconfig.file=/opt/docker/conf/application.conf"
+    --env JAVA_OPTS="-Dconfig.file=/opt/docker/conf/application.conf" \
     glyderj/kafka-siren
 ```
 
