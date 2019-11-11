@@ -16,13 +16,15 @@ package object exporter {
   }
 
   implicit class ConsumerSettingsOps[F[_]](val settings: ConsumerSettings[F, Array[Byte], Array[Byte]]) extends AnyVal {
-    def withSecurityConfig(maybeSecure: Option[SecurityConfig]): ConsumerSettings[F, Array[Byte], Array[Byte]] =
-      maybeSecure.fold(settings)(sc => settings.withProperties(sc.toMap))
+    def withSecurityConfig(securityConfig: SecurityConfig): ConsumerSettings[F, Array[Byte], Array[Byte]] =
+      securityConfig.sslConfig.fold(settings)(ssl =>
+        if (securityConfig.protocol.toLowerCase == "ssl") settings.withProperties(ssl.toMap) else settings)
   }
 
   implicit class AdminClientSettingsOps[F[_]](val settings: AdminClientSettings[F]) extends AnyVal {
-    def withSecurityConfig(maybeSecure: Option[SecurityConfig]): AdminClientSettings[F] =
-      maybeSecure.fold(settings)(sc => settings.withProperties(sc.toMap))
+    def withSecurityConfig(securityConfig: SecurityConfig): AdminClientSettings[F] =
+      securityConfig.sslConfig.fold(settings)(ssl =>
+        if (securityConfig.protocol.toLowerCase == "ssl") settings.withProperties(ssl.toMap) else settings)
   }
 
 }

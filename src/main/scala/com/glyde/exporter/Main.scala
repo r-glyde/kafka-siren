@@ -19,11 +19,11 @@ object Main extends IOApp with LazyLogging {
 
     val adminSettings = AdminClientSettings[IO]
       .withBootstrapServers(config.exporter.kafka.bootstrapServers)
-      .withSecurityConfig(config.exporter.kafka.securityConfig)
+      .withSecurityConfig(config.exporter.kafka.security)
     val consumerSettings = ConsumerSettings[IO, Array[Byte], Array[Byte]]
       .withBootstrapServers(config.exporter.kafka.bootstrapServers)
       .withGroupId("kafka-exporter")
-      .withSecurityConfig(config.exporter.kafka.securityConfig)
+      .withSecurityConfig(config.exporter.kafka.security)
 
     adminClientResource(adminSettings).use { adminClient =>
       consumerResource(consumerSettings).use { consumer =>

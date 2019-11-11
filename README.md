@@ -35,7 +35,7 @@ docker run -p 9000:9000 \
     glyderj/kafka-siren
 ```
 
-Mount the below inside your container and load
+Mount the below `application.conf` inside your container.
 ```hocon
 exporter {
   kafka {
@@ -45,6 +45,7 @@ exporter {
   port = 9000
 }
 ```
+Then:
 ```bash
 docker run -p 9000:9000 \
     -v $(pwd):/opt/docker/conf/ \
