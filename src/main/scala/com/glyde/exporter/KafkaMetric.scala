@@ -9,7 +9,7 @@ import org.apache.kafka.common.TopicPartition
 import scala.language.higherKinds
 
 sealed trait KafkaMetric extends Product with Serializable {
-  def updated[F[_] : Sync](): F[Unit] = this match {
+  def updated[F[_] : Sync]: F[Unit] = this match {
     case PartitionEnd(p, o) =>
       Sync[F].delay { partitionEnd.refine(Map("topic" -> p.topic, "partition" -> p.partition.toString)).set(o) }
     case GroupMembers(id, members) =>

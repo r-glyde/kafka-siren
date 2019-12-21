@@ -14,7 +14,9 @@ libraryDependencies ++= Seq(
   "io.kamon"                   %% "kamon-core"       % "1.1.6",
   "io.kamon"                   %% "kamon-prometheus" % "1.1.2",
   "com.github.pureconfig"      %% "pureconfig"       % "0.12.1",
-  "ch.qos.logback"             % "logback-classic"   % "1.2.3",
+  "ch.qos.logback"              % "logback-classic"  % "1.2.3",
   "com.typesafe.scala-logging" %% "scala-logging"    % "3.9.2",
-  "org.apache.kafka"           % "kafka-clients"     % "2.3.1" % Test
+  "org.apache.kafka"            % "kafka-clients"    % "2.3.1" % Test,
+  "org.scalatest"              %% "scalatest"        % "3.0.5" % Test,
+  "io.github.embeddedkafka"    %% "embedded-kafka"   % "2.3.1" % Test
 )
