@@ -28,10 +28,10 @@ final case class SslConfig(keystoreLocation: String,
 }
 
 object Config {
-  implicit val showConfig: Show[Config] = (t: Config) => s"""
-       |kafka-brokers: ${t.exporter.kafka.bootstrapServers}
-       |poll-interval: ${t.exporter.pollInterval}
-       |group-whitelist: ${t.exporter.kafka.groupWhitelist.mkString(",")}
-       |security-protocol: ${t.exporter.kafka.security.protocol}
+  implicit val showConfig: Show[Config] = (c: Config) => s"""
+       |kafka-brokers: ${c.exporter.kafka.bootstrapServers}
+       |poll-interval: ${c.exporter.pollInterval}
+       |group-whitelist: ${c.exporter.kafka.groupWhitelist.mkString(",")}
+       |security-protocol: ${c.exporter.kafka.security.protocol}
      """.stripMargin
 }

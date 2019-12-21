@@ -46,6 +46,6 @@ final case class KafkaExtractor[F[_] : Sync](adminClient: KafkaAdminClient[F],
                 val endOffset = endOffsets.getOrElse(tp, 0L)
                 List(GroupOffset(id, tp, om.offset), GroupLag(id, tp, endOffset - om.offset))
             }.toList)
-            .map(_ :+ GroupMembers(id, desc.members.size))
+            .map(GroupMembers(id, desc.members.size) +: _)
       })
 }

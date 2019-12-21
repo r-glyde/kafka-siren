@@ -3,6 +3,7 @@ package com.glyde.exporter
 import cats.effect.Sync
 import com.glyde.exporter.KafkaMetric._
 import kamon.Kamon
+import kamon.metric.GaugeMetric
 import org.apache.kafka.common.TopicPartition
 
 import scala.language.higherKinds
