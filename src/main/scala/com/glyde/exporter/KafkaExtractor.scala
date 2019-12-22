@@ -22,7 +22,7 @@ final case class KafkaExtractor[F[_] : Sync](adminClient: KafkaAdminClient[F],
                        }
       partitions    <- topicPartitions(topics.toList)
       endOffsets    <- consumer.endOffsets(partitions.toSet)
-      offsetMetrics <- Sync[F].delay(endOffsets.map { case (tp, o) => PartitionEnd(tp, o) }.toList)
+      offsetMetrics <- Sync[F].pure(endOffsets.map { case (tp, o) => PartitionEnd(tp, o) }.toList)
       groupMetrics  <- groupMetrics(filteredGroups, endOffsets)
     } yield offsetMetrics ++ groupMetrics
 

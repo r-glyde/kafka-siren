@@ -12,7 +12,7 @@ package object exporter {
 
   implicit class IOps[F[_]](val task: F[Unit]) extends AnyVal {
     def repeatEvery(interval: FiniteDuration)(implicit timer: Timer[F], f: FlatMap[F]): F[Unit] =
-      task >>= (_ => timer.sleep(interval)) >>= (_ => repeatEvery(interval))
+      task >> timer.sleep(interval) >> repeatEvery(interval)
   }
 
   implicit class ConsumerSettingsOps[F[_]](val settings: ConsumerSettings[F, Array[Byte], Array[Byte]]) extends AnyVal {
