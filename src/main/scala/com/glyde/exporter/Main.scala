@@ -27,10 +27,10 @@ object Main extends IOApp with LazyLogging {
     adminClientResource(adminSettings).use { adminClient =>
       consumerResource(consumerSettings).use { consumer =>
         val extractor = KafkaExtractor(adminClient, consumer)
-        (for {
-          metrics <- extractor.pollMetrics(config.exporter.kafka.groupWhitelist)
-          _       <- metrics.traverse(_.updated[IO])
-        } yield ()).repeatEvery(config.exporter.pollInterval)
+        extractor
+          .pollMetrics(config.exporter.kafka.groupWhitelist)
+          .flatMap(metrics => metrics.traverse_(_.updated[IO]))
+          .repeatEvery(config.exporter.pollInterval)
       }.map(_ => ExitCode.Success)
     }
   }
