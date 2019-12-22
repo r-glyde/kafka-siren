@@ -3,7 +3,7 @@ package com.glyde.exporter
 import cats.effect.Sync
 import com.glyde.exporter.KafkaMetric._
 import kamon.Kamon
-import kamon.metric.GaugeMetric
+import kamon.tag.TagSet
 import org.apache.kafka.common.TopicPartition
 
 import scala.language.higherKinds
@@ -11,20 +11,28 @@ import scala.language.higherKinds
 sealed trait KafkaMetric extends Product with Serializable {
   def updated[F[_] : Sync]: F[Unit] = this match {
     case PartitionEnd(p, o) =>
-      Sync[F].delay { partitionEnd.refine(Map("topic" -> p.topic, "partition" -> p.partition.toString)).set(o) }
+      Sync[F].delay {
+        partitionEnd
+          .withTags(TagSet.from(Map("topic" -> p.topic, "partition" -> p.partition.toString)))
+          .update(o)
+      }
     case GroupMembers(id, members) =>
-      Sync[F].delay { groupMembers.refine("consumer_group", id).set(members) }
+      Sync[F].delay {
+        groupMembers
+          .withTag("consumer_group", id)
+          .update(members)
+      }
     case GroupOffset(id, p, o) =>
       Sync[F].delay {
         groupOffset
-          .refine(Map("consumer_group" -> id, "topic" -> p.topic, "partition" -> p.partition.toString))
-          .set(o)
+          .withTags(TagSet.from(Map("consumer_group" -> id, "topic" -> p.topic, "partition" -> p.partition.toString)))
+          .update(o)
       }
     case GroupLag(id, p, lag) =>
       Sync[F].delay {
         groupLag
-          .refine(Map("consumer_group" -> id, "topic" -> p.topic, "partition" -> p.partition.toString))
-          .set(lag)
+          .withTags(TagSet.from(Map("consumer_group" -> id, "topic" -> p.topic, "partition" -> p.partition.toString)))
+          .update(lag)
       }
   }
 }

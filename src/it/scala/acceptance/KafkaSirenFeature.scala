@@ -5,7 +5,6 @@ import net.manub.embeddedkafka.Codecs.stringSerializer
 import net.manub.embeddedkafka.EmbeddedKafkaConfig
 import org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG
 import org.scalatest.concurrent.Eventually
-import sttp.client.HttpURLConnectionBackend
 import sttp.client._
 
 import scala.concurrent.duration._
@@ -17,7 +16,6 @@ class KafkaSirenFeature extends FeatureSpecBase with Eventually {
   val groupId = "test-consumer-group"
   val topic   = "test-topic"
 
-  implicit val backend = HttpURLConnectionBackend()
   implicit val kc = EmbeddedKafkaConfig(
     kafkaPort = 9093,
     zooKeeperPort = 2181,
@@ -34,8 +32,8 @@ class KafkaSirenFeature extends FeatureSpecBase with Eventually {
 
         List(
           s"""kafka_consumer_group_members{consumer_group="$groupId"}""",
-          s"""kafka_consumer_group_lag{consumer_group="$groupId",topic="$topic",partition="0"} 6""",
-          s"""kafka_consumer_group_offset{consumer_group="$groupId",topic="$topic",partition="0"} 5""",
+          s"""kafka_consumer_group_lag{topic="$topic",consumer_group="$groupId",partition="0"} 6""",
+          s"""kafka_consumer_group_offset{topic="$topic",consumer_group="$groupId",partition="0"} 5""",
           s"""kafka_topic_partition_end{topic="$topic",partition="0"} 11"""
         ).forall(responseBody.contains) shouldBe true
       }

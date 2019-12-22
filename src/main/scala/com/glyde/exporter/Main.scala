@@ -5,14 +5,13 @@ import cats.implicits._
 import com.typesafe.scalalogging.LazyLogging
 import fs2.kafka._
 import kamon.Kamon
-import kamon.prometheus.PrometheusReporter
 import pureconfig.ConfigSource
 import pureconfig.generic.auto._
 
 object Main extends IOApp with LazyLogging {
 
   override def run(args: List[String]): IO[ExitCode] = {
-    Kamon.addReporter(new PrometheusReporter())
+    Kamon.loadModules()
 
     val config = ConfigSource.default.loadOrThrow[Config]
     logger.info(s"Initialised kafka-exporter with configuration: ${config.show}")

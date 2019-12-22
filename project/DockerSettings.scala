@@ -17,7 +17,7 @@ object DockerSettings {
     packageName in Docker := "kafka-siren",
     dockerCommands ++= Seq(
       Cmd("USER", "root"),
-      Cmd("RUN", "apk update && apk add bash")
+      Cmd("RUN", "apk update && apk add bash && apk add eudev")
     ),
     testCasesPackageTask := (packageBin in IntegrationTest).value,
     testCasesJar := artifactPath.in(IntegrationTest, packageBin).value.getAbsolutePath,
