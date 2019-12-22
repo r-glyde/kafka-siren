@@ -1,3 +1,4 @@
+import com.tapad.docker.DockerComposePlugin.dockerComposeTest
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{Docker => docker}
 import sbt.Keys._
 import sbt.taskKey
@@ -17,6 +18,8 @@ object Release {
     releaseTagComment := s"Releasing ${version.value} of module: ${name.value}",
     releaseProcess := Seq[ReleaseStep](
       runClean,
+      runTest,
+      releaseStepCommand(dockerComposeTest),
       checkSnapshotDependencies,
       inquireVersions,
       setReleaseVersion,

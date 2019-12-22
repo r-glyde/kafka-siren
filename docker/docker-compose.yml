@@ -21,3 +21,13 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,OUTSIDE://localhost:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
+  kafka-siren:
+    image: glyderj/kafka-siren:latest<localBuild>
+    restart: always
+    depends_on:
+      - kafka
+    ports:
+      - "9095:9095"
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      KAFKA_EXPORTER_POLL_INTERVAL: 1 seconds
