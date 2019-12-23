@@ -32,10 +32,24 @@ class KafkaSirenFeature extends FeatureSpecBase with Eventually {
 
         List(
           s"""kafka_consumer_group_members{consumer_group="$groupId"}""",
-          s"""kafka_consumer_group_lag{topic="$topic",consumer_group="$groupId",partition="0"} 6""",
-          s"""kafka_consumer_group_offset{topic="$topic",consumer_group="$groupId",partition="0"} 5""",
+          s"""kafka_consumer_group_lag{consumer_group="$groupId",topic="$topic",partition="0"} 6""",
+          s"""kafka_consumer_group_offset{consumer_group="$groupId",topic="$topic",partition="0"} 5""",
           s"""kafka_topic_partition_end{topic="$topic",partition="0"} 11"""
-        ).forall(responseBody.contains) shouldBe true
+        ).forall(responseBody.contains(_)) shouldBe true
+      }
+    }
+
+    scenario("a topic is deleted and its metrics are no longer reported") { _ =>
+      deleteTopics(List(topic))
+
+      eventually {
+        val responseBody = basicRequest.get(uri"localhost:9095").send().body.right.value
+
+        List(
+          s"""kafka_consumer_group_lag{consumer_group="$groupId",topic="$topic",partition="0"}""",
+          s"""kafka_consumer_group_offset{consumer_group="$groupId",topic="$topic",partition="0"}""",
+          s"""kafka_topic_partition_end{topic="$topic",partition="0"}"""
+        ).forall(!responseBody.contains(_)) shouldBe true
       }
     }
   }

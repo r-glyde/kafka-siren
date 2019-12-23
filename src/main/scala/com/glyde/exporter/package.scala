@@ -1,18 +1,28 @@
 package com.glyde
 
-import cats.FlatMap
-import cats.effect.Timer
-import cats.implicits._
-import fs2.kafka.{AdminClientSettings, ConsumerSettings}
+import cats.effect.{Concurrent, ConcurrentEffect, ContextShift, Timer}
+import fs2.kafka._
 
-import scala.concurrent.duration.FiniteDuration
 import scala.language.higherKinds
 
 package object exporter {
 
-  implicit class IOps[F[_]](val task: F[Unit]) extends AnyVal {
-    def repeatEvery(interval: FiniteDuration)(implicit timer: Timer[F], f: FlatMap[F]): F[Unit] =
-      task >> timer.sleep(interval) >> repeatEvery(interval)
+  def withAdminClientAndConsumer[T, F[_] : Concurrent : ContextShift : Timer : ConcurrentEffect](
+      config: ExporterConfig)(f: (KafkaAdminClient[F], KafkaConsumer[F, Array[Byte], Array[Byte]]) => F[T]): F[T] = {
+
+    val adminSettings = AdminClientSettings[F]
+      .withBootstrapServers(config.kafka.bootstrapServers)
+      .withSecurityConfig(config.kafka.security)
+    val consumerSettings = ConsumerSettings[F, Array[Byte], Array[Byte]]
+      .withBootstrapServers(config.kafka.bootstrapServers)
+      .withGroupId("kafka-exporter")
+      .withSecurityConfig(config.kafka.security)
+
+    adminClientResource(adminSettings).use { adminClient =>
+      consumerResource(consumerSettings).use { consumer =>
+        f(adminClient, consumer)
+      }
+    }
   }
 
   implicit class ConsumerSettingsOps[F[_]](val settings: ConsumerSettings[F, Array[Byte], Array[Byte]]) extends AnyVal {

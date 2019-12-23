@@ -8,7 +8,7 @@ import scala.concurrent.duration.FiniteDuration
 import scala.util.matching.Regex
 
 final case class Config(exporter: ExporterConfig)
-final case class ExporterConfig(kafka: KafkaConfig, pollInterval: FiniteDuration)
+final case class ExporterConfig(kafka: KafkaConfig, pollInterval: FiniteDuration, port: Int, host: String)
 final case class KafkaConfig(bootstrapServers: String, groupWhitelist: List[Regex], security: SecurityConfig)
 final case class SecurityConfig(protocol: String, sslConfig: Option[SslConfig])
 
