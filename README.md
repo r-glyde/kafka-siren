@@ -2,10 +2,6 @@
 
 Export metrics from a kafka cluster for prometheus
 
-> "... inadequate, even childish measures, may serve to rescue one from peril."
->
-> &mdash; Franz Kafka (introduction to 'The Silence of the Sirens')
-
 ### Configuration
 Configuration options can be passed via environment variables, system properties or a configuration file.
 
