@@ -21,6 +21,7 @@ object DockerSettings {
     ),
     testCasesPackageTask := (packageBin in IntegrationTest).value,
     testCasesJar := artifactPath.in(IntegrationTest, packageBin).value.getAbsolutePath,
+    composeContainerPauseBeforeTestSeconds := 10,
     dockerImageCreationTask := (publishLocal in Docker).value,
     testDependenciesClasspath :=
       (fullClasspath in IntegrationTest).value.files.map(_.getAbsoluteFile).mkString(File.pathSeparator)

@@ -1,5 +1,5 @@
 name := "kafka-siren"
-scalaVersion := "2.12.10"
+scalaVersion := "2.12.11"
 
 scalacOptions += "-Ypartial-unification"
 
@@ -11,18 +11,18 @@ Defaults.itSettings
 configs(IntegrationTest)
 
 libraryDependencies ++= Seq(
-  "org.typelevel"                %% "cats-effect"           % "2.0.0",
-  "org.typelevel"                %% "cats-core"             % "2.0.0",
-  "com.ovoenergy"                %% "fs2-kafka"             % "0.20.2",
-  "org.http4s"                   %% "http4s-dsl"            % "0.20.15",
-  "org.http4s"                   %% "http4s-blaze-server"   % "0.20.15",
-  "com.github.pureconfig"        %% "pureconfig"            % "0.12.1",
-  "ch.qos.logback"                % "logback-classic"       % "1.2.3",
+  "org.typelevel"                %% "cats-effect"           % "2.1.3",
+  "org.typelevel"                %% "cats-core"             % "2.1.1",
+  "com.github.fd4s"              %% "fs2-kafka"             % "1.0.0",
+  "io.kamon"                     %% "kamon-core"            % "2.1.0",
+  "io.kamon"                     %% "kamon-prometheus"      % "2.1.0",
+  "com.github.pureconfig"        %% "pureconfig"            % "0.12.3",
+  "ch.qos.logback"               % "logback-classic"        % "1.2.3",
   "com.typesafe.scala-logging"   %% "scala-logging"         % "3.9.2",
-  "org.apache.kafka"              % "kafka-clients"         % "2.3.1"     % "test,it",
-  "org.scalatest"                %% "scalatest"             % "3.0.8"     % "test,it",
-  "org.scalacheck"               %% "scalacheck"            % "1.13.5"    % "test,it",
-  "com.danielasfregola"          %% "random-data-generator" % "2.6"       % "test,it",
-  "io.github.embeddedkafka"      %% "embedded-kafka"        % "2.3.1"     % "test,it",
-  "com.softwaremill.sttp.client" %% "core"                  % "2.0.0-RC5" % "test,it"
+  "org.apache.kafka"             % "kafka-clients"          % "2.5.0" % "test,it",
+  "org.scalatest"                %% "scalatest"             % "3.0.8" % "test,it",
+  "org.scalacheck"               %% "scalacheck"            % "1.13.5" % "test,it",
+  "com.danielasfregola"          %% "random-data-generator" % "2.8" % "test,it",
+  "io.github.embeddedkafka"      %% "embedded-kafka"        % "2.5.0" % "test,it",
+  "com.softwaremill.sttp.client" %% "core"                  % "2.1.1" % "test,it"
 )

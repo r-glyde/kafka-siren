@@ -14,9 +14,6 @@ abstract class FeatureSpecBase
 
   implicit val backend = HttpURLConnectionBackend()
 
-  override def afterAll(): Unit = {
-    super.afterAll()
-    backend.close()
-  }
+  override def afterAll(): Unit = backend.close()
 
 }
